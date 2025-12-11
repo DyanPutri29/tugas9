@@ -5,11 +5,12 @@ $db_pass = '';
 $db_name = 'kampus';
 
 $conn = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
+
 if (!$conn) {
     die('Gagal terhubung ke MySQL: ' . mysqli_connect_error());
 }
 
-$sql = "SELECT * FROM tbl_dosen ORDER BY nidn ASC";
+$sql = "SELECT * FROM tbl_nilai ORDER BY id_nilai ASC";
 $query = mysqli_query($conn, $sql);
 
 if (!$query) {
@@ -22,7 +23,7 @@ if (!$query) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Dosen</title>
+    <title>Data Nilai Mahasiswa</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
@@ -73,32 +74,48 @@ if (!$query) {
 <div class="container mt-5">
     <div class="card shadow-lg">
         <div class="card-header text-white text-center py-3">
-            <h4 class="mb-0"><i class="bi bi-person-vcard-fill"></i> Data Dosen</h4>
+            <h4 class="mb-0"><i class="bi bi-journal-check"></i> Data Nilai Mahasiswa</h4>
         </div>
 
         <div class="card-body">
-            <a href="index.php" class="btn btn-back mb-3">
+            <a href="../index.php" class="btn btn-back mb-3">
                 <i class="bi bi-arrow-left-circle"></i> Kembali ke Menu
+            </a>
+             <a href="tambah.php" class="btn btn-back mb-3">
+                <i class="bi bi-arrow-left-circle"></i> Tambah Nilai
             </a>
 
             <div class="table-responsive">
                 <table class="table table-bordered text-center align-middle">
                     <thead>
                         <tr>
+                            <th>ID Nilai</th>
+                            <th>Nilai Angka</th>
+                            <th>Nilai Huruf</th>
+                            <th>Kode Matkul</th>
+                            <th>NIM</th>
                             <th>NIDN</th>
-                            <th>Nama Dosen</th>
-                            <th>Prodi</th>
-                            <th>Email</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         <?php while ($row = mysqli_fetch_assoc($query)) : ?>
                         <tr>
+                            <td><?= $row['id_nilai'] ?></td>
+                            <td><?= $row['nilai'] ?></td>
+                            <td><?= $row['nilaiHuruf'] ?></td>
+                            <td><?= $row['kodeMatkul'] ?></td>
+                            <td><?= $row['nim'] ?></td>
                             <td><?= $row['nidn'] ?></td>
-                            <td><?= $row['nama'] ?></td>
-                            <td><?= $row['prodi'] ?></td>
-                            <td><?= $row['email'] ?></td>
+                            <td>
+                                <a href="update.php?id_nilai=<?= $row['id_nilai']; ?>" class="btn btn-sm btn-warning">
+                                    <i class="bi bi-pencil-square"></i> Edit
+                                </a>
+                                <a href="delete.php?id_nilai=<?= $row['id_nilai']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus data ini?');">
+                                    <i class="bi bi-trash-fill"></i> Hapus
+                                </a>
+                            </td>
                         </tr>
                         <?php endwhile; ?>
                     </tbody>

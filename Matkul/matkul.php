@@ -5,11 +5,12 @@ $db_pass = '';
 $db_name = 'kampus';
 
 $conn = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
+
 if (!$conn) {
     die('Gagal terhubung ke MySQL: ' . mysqli_connect_error());
 }
 
-$sql = "SELECT * FROM tbl_mahasiswa ORDER BY nim ASC";
+$sql = "SELECT * FROM tbl_matkul ORDER BY kodeMatkul ASC";
 $query = mysqli_query($conn, $sql);
 
 if (!$query) {
@@ -22,7 +23,7 @@ if (!$query) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Mahasiswa</title>
+    <title>Data Mata Kuliah</title>
 
     <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
@@ -52,18 +53,35 @@ if (!$query) {
         .btn-back:hover {
             background: #ff3385;
         }
-        table {
-            background: #ffffff;
-            border-radius: 10px;
-        }
         thead {
-            background: #ff99cc !important;
+            background-color: #ff99cc !important;
             color: #fff;
-            font-size: 16px;
         }
         tbody tr:hover {
             background-color: #ffe0ef;
             transition: 0.3s;
+        }
+        table {
+            background: #ffffff;
+            border-radius: 10px;
+        }
+        .btn-edit {
+            background: #28a745;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 10px;
+        }
+        .btn-edit:hover {
+            background: #218838;
+        }
+        .btn-hapus {
+            background: #dc3545;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 10px;
+        }
+        .btn-hapus:hover {
+            background: #c82333;
         }
     </style>
 
@@ -74,36 +92,53 @@ if (!$query) {
 <div class="container mt-5">
     <div class="card shadow-lg">
         <div class="card-header text-white text-center py-3">
-            <h4 class="mb-0"><i class="bi bi-people-fill"></i> Data Mahasiswa</h4>
+            <h4 class="mb-0"><i class="bi bi-book-half"></i> Data Mata Kuliah</h4>
         </div>
 
         <div class="card-body">
-
-            <a href="index.php" class="btn btn-back mb-3">
+            <a href="../index.php" class="btn btn-back mb-3">
                 <i class="bi bi-arrow-left-circle"></i> Kembali ke Menu
             </a>
+
+             <a href="tambah.php" class="btn btn-back mb-3">
+                <i class="bi bi-plus-circle"></i> Tambah Matkul
+            </a>
+
 
             <div class="table-responsive">
                 <table class="table table-bordered text-center align-middle">
                     <thead>
                         <tr>
-                            <th>NIM</th>
-                            <th>Nama</th>
-                            <th>Prodi</th>
-                            <th>Email</th>
+                            <th>Kode Matkul</th>
+                            <th>Nama Matkul</th>
+                            <th>SKS</th>
+                            <th>NIDN</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         <?php while ($row = mysqli_fetch_assoc($query)) : ?>
                         <tr>
-                            <td><?= $row['nim'] ?></td>
-                            <td><?= $row['nama'] ?></td>
-                            <td><?= $row['prodi'] ?></td>
-                            <td><?= $row['email'] ?></td>
+                            <td><?= $row['kodeMatkul'] ?></td>
+                            <td><?= $row['namaMatkul'] ?></td>
+                            <td><?= $row['sks'] ?></td>
+                            <td><?= $row['nidn'] ?></td>
+                            <td>
+                                <a href="proses_edit.php?kodeMatkul=<?= $row['kodeMatkul'] ?>" class="btn btn-edit">
+                                    <i class="bi bi-pencil-square"></i> Edit
+                                </a>
+
+                                <a href="delete.php?kodeMatkul=<?= $row['kodeMatkul'] ?>"
+                                   class="btn btn-hapus"
+                                   onclick="return confirm('Yakin ingin menghapus?');">
+                                   <i class="bi bi-trash"></i> Hapus
+                                </a>
+                            </td>
                         </tr>
                         <?php endwhile; ?>
                     </tbody>
+
                 </table>
             </div>
 

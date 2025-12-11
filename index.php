@@ -53,28 +53,28 @@
             <div class="row text-center g-3">
 
                 <div class="col-md-3 col-6">
-                    <a href="mahasiswa.php" class="btn btn-menu w-100">
+                    <a href="Mahasiswa/mahasiswa.php" class="btn btn-menu w-100">
                         <i class="bi bi-people-fill icon-menu"></i><br>
                         Mahasiswa
                     </a>
                 </div>
 
                 <div class="col-md-3 col-6">
-                    <a href="nilai.php" class="btn btn-menu w-100">
+                    <a href="Nilai/nilai.php" class="btn btn-menu w-100">
                         <i class="bi bi-journal-bookmark-fill icon-menu"></i><br>
                         Nilai
                     </a>
                 </div>
 
                 <div class="col-md-3 col-6">
-                    <a href="dosen.php" class="btn btn-menu w-100">
+                    <a href="dosen/dosen.php" class="btn btn-menu w-100">
                         <i class="bi bi-person-badge-fill icon-menu"></i><br>
                         Dosen
                     </a>
                 </div>
 
                 <div class="col-md-3 col-6">
-                    <a href="matkul.php" class="btn btn-menu w-100">
+                    <a href="matkul/matkul.php" class="btn btn-menu w-100">
                         <i class="bi bi-book-half icon-menu"></i><br>
                         Mata Kuliah
                     </a>
