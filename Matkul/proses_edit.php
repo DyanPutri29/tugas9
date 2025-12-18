@@ -1,4 +1,18 @@
 <?php
+session_start();
+if (!isset($_SESSION['login_user'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// hanya admin yang boleh tambah data mahasiswa
+if ($_SESSION['role'] != 'dosen') {
+    header("Location: ../index.php?page=dashboard");
+    exit();
+}
+?>
+
+<?php
 include '../koneksi.php';
 $xkodematkul = $_GET['kodeMatkul'];
 $data = mysqli_query($conn, "SELECT * FROM tbl_matkul WHERE kodeMatkul='$xkodematkul'");

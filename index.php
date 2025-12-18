@@ -1,3 +1,11 @@
+<?php
+session_start();
+if (!isset($_SESSION['login_user'])) {
+    header("Location: login.php");
+    exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -5,27 +13,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu Utama</title>
 
-    <!-- Bootstrap -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
     <style>
-        body {
-            background: #ffe6f2; /* pink soft */
-        }
-        .card {
-            border-radius: 20px;
-        }
+        body { background: #ffe6f2; }
+        .card { border-radius: 20px; }
         .btn-menu {
             border-radius: 15px;
             padding: 20px;
             font-size: 18px;
             font-weight: 600;
-            transition: 0.3s;
             background-color: #ffb3d9;
-            color: #ffffff;
+            color: #fff;
             border: none;
         }
         .btn-menu:hover {
@@ -42,6 +42,14 @@
 <body>
 
 <div class="container mt-5">
+
+    <!-- INFO LOGIN -->
+    <div class="text-end mb-2">
+        Login sebagai <b> <?php echo $_SESSION['login_user']; ?>
+        <?php echo ucfirst($_SESSION['role']); ?>
+        | <a href="logout.php">Logout</a>
+    </div>
+
     <div class="card shadow-lg">
         <div class="card-header text-white text-center" style="background-color: #ff66b3;">
             <h3 class="mt-1">Menu Utama 💖</h3>
@@ -81,7 +89,6 @@
                 </div>
 
             </div>
-
         </div>
     </div>
 </div>
