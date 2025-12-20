@@ -1,60 +1,62 @@
 <?php
-session_start();
-if (!isset($_SESSION['login_user'])) {
-    header("Location: login.php");
-    exit();
-}
-
-// hanya admin yang boleh tambah data mahasiswa
-if ($_SESSION['role'] != 'dosen') {
-    header("Location: ../index.php?page=dashboard");
-    exit();
-}
-?>
-
-<?php
 include '../koneksi.php';
 
-$nim = $_GET['nim'];
-$sql = "SELECT * FROM tbl_mahasiswa WHERE nim = '$nim'";
-$query = mysqli_query($conn, $sql);
-$data = mysqli_fetch_assoc($query);
-?>
+/* CEK METHOD */
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header("Location: mahasiswa.php");
+    exit;
+}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Edit Mahasiswa</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body>
+/* AMBIL DATA */
+$nim   = $_POST['nim'] ?? '';
+$nama  = $_POST['nama'] ?? '';
+$prodi = $_POST['prodi'] ?? '';
+$email = $_POST['email'] ?? '';
 
-<div class="container mt-5">
-    <h3>Edit Data Mahasiswa</h3>
+/* VALIDASI DASAR */
+if ($nim === '' || $nama === '' || $prodi === '' || $email === '') {
+    header("Location: update.php?nim=$nim&error=data_kosong");
+    exit;
+}
 
-    <form action="update.php" method="post">
+/* CEK FOTO BARU */
+if (!empty($_FILES['foto']['name'])) {
 
-        <input type="hidden" name="nim" value="<?= $data['nim'] ?>">
+    // validasi ukuran max 1MB
+    if ($_FILES['foto']['size'] > 1048576) {
+        header("Location: update.php?nim=$nim&error=foto_besar");
+        exit;
+    }
 
-        <div class="mb-3">
-            <label>Nama</label>
-            <input type="text" name="nama" class="form-control" value="<?= $data['nama'] ?>" required>
-        </div>
+    $namaFile = time() . "_" . $_FILES['foto']['name'];
+    $tmp      = $_FILES['foto']['tmp_name'];
+    $folder   = "../foto/";
 
-        <div class="mb-3">
-            <label>Prodi</label>
-            <input type="text" name="prodi" class="form-control" value="<?= $data['prodi'] ?>" required>
-        </div>
+    if (!move_uploaded_file($tmp, $folder . $namaFile)) {
+        header("Location: update.php?nim=$nim&error=upload_gagal");
+        exit;
+    }
 
-        <div class="mb-3">
-            <label>Email</label>
-            <input type="email" name="email" class="form-control" value="<?= $data['email'] ?>" required>
-        </div>
+    $sql = "UPDATE tbl_mahasiswa SET
+            nama='$nama',
+            prodi='$prodi',
+            email='$email',
+            foto='$namaFile'
+            WHERE nim='$nim'";
 
-        <button type="submit" class="btn btn-primary">Update</button>
-    </form>
+} else {
 
-</div>
+    // TANPA GANTI FOTO
+    $sql = "UPDATE tbl_mahasiswa SET
+            nama='$nama',
+            prodi='$prodi',
+            email='$email'
+            WHERE nim='$nim'";
+}
 
-</body>
-</html>
+/* EKSEKUSI QUERY */
+mysqli_query($koneksi, $sql);
+
+/* REDIRECT BERHASIL */
+header("Location: mahasiswa.php?status=update_ok");
+exit;
